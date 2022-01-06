@@ -42,6 +42,8 @@ Route::group([ 'prefix' => 'admin'], function(){
     Route::group([ 'prefix' => '/brands'], function(){
         Route::get('/manage', 'App\Http\Controllers\Backend\BrandController@index')->name('brands.manage');
         Route::get('/create', 'App\Http\Controllers\Backend\BrandController@create')->name('brands.create');
+        Route::post('/store', 'App\Http\Controllers\Backend\BrandController@store')->name('brands.store');
+
 
     });
 

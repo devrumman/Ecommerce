@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\Backend\Brand;
 use Illuminate\Http\Request;
+use File;
+use Image;
 
 class BrandController extends Controller
 {
@@ -37,7 +39,28 @@ class BrandController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|max255'
+        ],
+        [
+            'name.required' => 'Please Provide Brand Name'
+        ]);
+
+        $brand = new Brand();
+        $brand->name = $request->name;
+        $brand->desc = $request->desc;
+
+        if ($request->image)
+        {
+            $image = $request->file('image');
+            $img = time() . '.' . $image->getClientOriginalExtension();
+            $location = public_path('backend/img/brands/' . $img);
+            Image::make($image)->save($location);
+            $brand->image = $img;
+        }
+
+        $brand->save();
+        return redirect()->route('brand.manage');
     }
 
     /**

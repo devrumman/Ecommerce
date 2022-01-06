@@ -41,19 +41,29 @@
               <!-- /.card-header -->
               <div class="card-body" style="display: block;">
                 
-                <form action="" method="POST" enctype="multipart/form-data">
+                <form action="{{route('brands.store')}}" method="POST" enctype="multipart/form-data">
+                  @csrf
+
                   <div class="form-group">
-                    <label for="">Brand Name</label>
-                    <input type="text" name=name" class="form-control" required='required' placeholder="Type The Brand Name">
+                    <label>Brand Name</label>
+                    <input type="text" name=name" class="form-control" required='required'>
                   </div>
 
                   <div class="form-group">
                     <label for="">Description</label>
-                    <input type="text" name=name" class="form-control" required='required' placeholder="Type The Brand Name">
+                    <textarea name="desc" rows="10" class="form-control"></textarea>
                   </div>
+               
+                  <div class="form-group">
+                    <label>Brand Logo</label>
+                    <input type="file" name=imge" class="form-control">
+                  </div>
+
+                  <div class="form-group">
+                    <input type="submit" name=addBrand" class="btn btn-primary btn-block" value="Add New Brand">
+                  </div>
+
                 </form>
-                
-                
               </div>
               <!-- /.card-body -->
             </div>
