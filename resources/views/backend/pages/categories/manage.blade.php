@@ -8,12 +8,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1 class="m-0">Manage All Brands</h1>
+          <h1 class="m-0">Manage All Categories</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
-            <li class="breadcrumb-item active">Manage Brands</li>
+            <li class="breadcrumb-item active">Manage Category</li>
           </ol>
         </div><!-- /.col -->
       </div><!-- /.row -->
@@ -45,36 +45,39 @@
                   <thead>
                     <tr>
                       <th scope="col">#Sl.</th>
-                      <th scope="col">Brand Name</th>
+                      <th scope="col">Category Name</th>
                       <th scope="col">Description</th>
                       <th scope="col">Image</th>
+                      <th scope="col">Parent Category</th>
                       <th scope="col">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     
                     @php $i = 1; @endphp
-                    @foreach ($brands as $brand)
+                    @foreach ($categories as $category)
                     <tr>
                       <th scope="row">{{$i}}</th>
-                      <td>{{$brand->name}}</td>
-                      <td>{{$brand->desc}}</td>
+                      <td>{{$category->name}}</td>
+                      <td>{{$category->desc}}</td>
                       <td class="text-center">
-                        @if ($brand->image == NULL)
+                        @if ($category->image == NULL)
                           No Thumbnail Uploded
                         @else
-                          <img src="{{asset('backend/img/brands/' . $brand->image)}}" width="30" center"alt="">
+                          <img src="{{asset('backend/img/categories/' . $category->image)}}" width="30" center"alt="">
                         @endif
                       </td>
+                      <td>{{$category->parent_id}}</td>
                       <td>
+
                         <div class="btn-g">
-                          <a href="{{route('brands.edit', $brand->id)}}" class="btn btn-primary btn-sm">Update</a>
-                          <a href="" data-toggle="modal" data-target="#deleteBrand{{$brand->id}}" class="btn btn-danger btn-sm">Delete</a>
+                          <a href="{{route('category.edit', $category->id)}}" class="btn btn-primary btn-sm">Update</a>
+                          <a href="" data-toggle="modal" data-target="#deleteCategory{{$category->id}}" class="btn btn-danger btn-sm">Delete</a>
                         </div>
                       </td>
 
                       <!--Delete Start Modal -->
-                      <div class="modal fade" id="deleteBrand{{$brand->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal fade" id="deleteCategory{{$category->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                           <div class="modal-content">
                             <div class="modal-header">
@@ -87,7 +90,7 @@
                               <div class="modal-button">
                                 <ul>
                                   <li>
-                                    <form action="{{route('brands.destroy', $brand->id)}}" method="POST">
+                                    <form action="{{route('category.destroy', $category->id)}}" method="POST">
                                       @csrf
                                       <button type="submit" class="btn btn-danger">Confirm</button>
                                     </form>
@@ -105,19 +108,18 @@
 
                     @php $i++; @endphp
                     @endforeach  
-                    @if ( $brands->count() == 0 )
-                      <div class="alert alert-info message-info">
-                        No Brand Added Yet. Please Add A Brand.
-                      </div>
-                    @endif  
-
                     </tr>
                   </tbody>
                 </table>
+                @if ( $categories->count() == 0 )
+                  <div class="alert alert-info message-info">
+                    No Category Added Yet. Please Add A Category.
+                  </div>
+                @endif  
               </div>
 
               <div class="form-group">
-                <button class="btn btn-primary btn-block" onclick="location.href='{{route('brands.create')}}';">Add New Brand</button>
+                <button class="btn btn-primary btn-block" onclick="location.href='{{route('category.create')}}';">Add New Category</button>
               </div>
 
               <!-- /.card-body -->

@@ -8,12 +8,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1 class="m-0">Add New Brands</h1>
+          <h1 class="m-0">Add New Category</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
-            <li class="breadcrumb-item active">Add New Brands</li>
+            <li class="breadcrumb-item active">Add New Category</li>
           </ol>
         </div><!-- /.col -->
       </div><!-- /.row -->
@@ -29,7 +29,7 @@
 	        	
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">All Brands List</h3>
+                <h3 class="card-title">All Category List</h3>
 
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -41,11 +41,11 @@
               <!-- /.card-header -->
               <div class="card-body" style="display: block;">
                 
-                <form action="{{ route('brands.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('category.store') }}" method="POST" enctype="multipart/form-data">
                   @csrf
 
                   <div class="form-group">
-                    <label>Brand Name</label>
+                    <label>Category Name</label>
                     <input type="text" name="name" class="form-control" required='required'>
                   </div>
 
@@ -55,11 +55,23 @@
                   </div>
                
                   <div class="form-group">
-                    <label>Brand Logo</label>
+                    <label>Category Logo</label>
                     <input type="file" name="image" class="form-control-file">
                   </div>
+
                   <div class="form-group">
-                    <input type="submit" name="addBrand" class="btn btn-primary btn-block" value="Add New Brand">
+                    <label>Parent Category</label>
+                      <select class="form-control" name="parent_id">
+                        <option>Please Select A Parent Category If Any</option>
+                        @foreach ($primary_category as $category)
+                          <option value="{{$category->id}}">{{$category->name}}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <input type="submit" name="addCategory" class="btn btn-primary btn-block" value="Add New Category">
                   </div>
 
                 </form>

@@ -17,7 +17,7 @@ class BrandController extends Controller
      */
     public function index()
     {
-        $brands = Brand::orderBy('name', 'desc')->get();
+        $brands = Brand::orderBy('name', 'asc')->get();
         return view('backend.pages.brands.manage', compact('brands'));
     }
 
@@ -40,13 +40,14 @@ class BrandController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|max255'
+            'name' => 'required|max:255'
         ],
         [
             'name.required' => 'Please Provide Brand Name'
         ]);
 
         $brand = new Brand();
+
         $brand->name = $request->name;
         $brand->desc = $request->desc;
 
@@ -60,16 +61,16 @@ class BrandController extends Controller
         }
 
         $brand->save();
-        return redirect()->route('brand.manage');
+        return redirect()->route('brands.manage');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Backend\Brand  $brand
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Brand $brand)
+    public function show($id)
     {
         //
     }
@@ -77,34 +78,67 @@ class BrandController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Backend\Brand  $brand
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Brand $brand)
+    public function edit($id)
     {
-        //
+        $brand = Brand::find($id);
+
+        if(!is_null($brand)){
+            return view('backend.pages.brands.edit', compact('brand'));
+        }
+        else{
+            return redirect()->route('brands.manage');
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Backend\Brand  $brand
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Brand $brand)
+    public function update(Request $request, $id)
     {
-        //
+        $brand = Brand::find($id);
+
+        $brand->name = $request->name;
+        $brand->desc  = $request->desc;
+
+        if (!empty($request->image)) 
+        {
+           if (File::exists('backend/img/brands/' . $brand->image)){
+               File::delete('backend/img/brands/' . $brand->image);  
+           }
+            $image = $request->file('image');
+            $img = rand() . '.' . $image->getClientOriginalExtension();
+            $location = public_path('backend/img/brands/' . $img);
+            Image::make($image)->save($location);
+            $brand->image = $img; 
+        }
+
+        $brand->save();
+        return redirect()->route('brands.manage');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Backend\Brand  $brand
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Brand $brand)
+    public function destroy($id)
     {
-        //
+        $brand = Brand::find($id);
+
+        if (File::exists('backend/img/brands/' . $brand->image))
+           {
+              File::delete('backend/img/brands/' . $brand->image);  
+           }
+           
+           $brand->delete();
+           return redirect()->route('brands.manage');
     }
 }
