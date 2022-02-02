@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin'], function () {
 
-    Route::get('/', 'App\Http\Controllers\Backend\PageController@dashboard')->name('admin.dashboard');
+    Route::get('/dashboard', 'App\Http\Controllers\Backend\PageController@dashboard')->name('admin.dashboard');
 
     Route::group(['prefix' => '/brands'], function () {
         Route::get('/manage', 'App\Http\Controllers\Backend\BrandController@index')->name('brands.manage');

@@ -102,6 +102,13 @@ class BrandController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'required|max:255'
+        ],
+        [
+            'name.required' => 'Please Provide Brand Name'
+        ]);
+        
         $brand = Brand::find($id);
 
         $brand->name = $request->name;

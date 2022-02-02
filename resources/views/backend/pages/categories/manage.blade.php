@@ -46,9 +46,9 @@
                     <tr>
                       <th scope="col">#Sl.</th>
                       <th scope="col">Category Name</th>
+                      <th scope="col">Category/Sub-Category</th>
                       <th scope="col">Description</th>
                       <th scope="col">Image</th>
-                      <th scope="col">Parent Category</th>
                       <th scope="col">Action</th>
                     </tr>
                   </thead>
@@ -59,6 +59,13 @@
                     <tr>
                       <th scope="row">{{$i}}</th>
                       <td>{{$category->name}}</td>
+                      <td>
+                        @if ($category->parent_id==0)
+                            Primary Category
+                        @else
+                            {{$category->parent->name}}
+                        @endif
+                      </td>
                       <td>{{$category->desc}}</td>
                       <td class="text-center">
                         @if ($category->image == NULL)
@@ -67,9 +74,7 @@
                           <img src="{{asset('backend/img/categories/' . $category->image)}}" width="30" center"alt="">
                         @endif
                       </td>
-                      <td>{{$category->parent_id}}</td>
                       <td>
-
                         <div class="btn-g">
                           <a href="{{route('category.edit', $category->id)}}" class="btn btn-primary btn-sm">Update</a>
                           <a href="" data-toggle="modal" data-target="#deleteCategory{{$category->id}}" class="btn btn-danger btn-sm">Delete</a>

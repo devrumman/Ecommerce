@@ -28,7 +28,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $primary_category = Category::orderBy('name', 'asc')->where('parent_id', NULL)->get();
+        $primary_category = Category::orderBy('name', 'asc')->where('parent_id', 0)->get();
         return view('backend.pages.categories.create', compact('primary_category'));
     }
 
@@ -40,6 +40,13 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|max:255'
+        ],
+        [
+            'name.required' => 'Please Provide Category Name'
+        ]);
+
         $category = new Category();
 
         $category->name       = $request->name;
@@ -47,8 +54,14 @@ class CategoryController extends Controller
         $category->image      = $request->image;
         $category->parent_id  = $request->parent_id;
 
-        // dd($batch);
-        // exit();
+        if ($request->image)
+        {
+            $image = $request->file('image');
+            $img = time() . '.' . $image->getClientOriginalExtension();
+            $location = public_path('backend/img/categories/' . $img);
+            Image::make($image)->save($location);
+            $category->image = $img;
+        }
 
         $category->save();
         return redirect()->route('category.manage')->with('success','New category added successfully');
@@ -71,9 +84,17 @@ class CategoryController extends Controller
      * @param  \App\Models\Model\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit($id)
     {
-        //
+        $primary_category = Category::orderBy('name', 'asc')->where('parent_id', 0)->get();
+        $category = Category::find($id);
+
+        if(!is_null($category)){
+            return view('backend.pages.categories.edit', compact('category', 'primary_category'));
+        }
+        else{
+            return redirect()->route('category.manage');
+        }
     }
 
     /**
@@ -83,9 +104,34 @@ class CategoryController extends Controller
      * @param  \App\Models\Model\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|max:255'
+        ],
+        [
+            'name.required' => 'Please Provide Category Name'
+        ]);
+        
+        $category = Category::find($id);
+        $category->name       = $request->name;
+        $category->desc       = $request->desc;
+        $category->parent_id  = $request->parent_id;
+
+        if (!empty($request->image)) 
+        {
+           if (File::exists('backend/img/categories/' . $category->image)){
+               File::delete('backend/img/categories/' . $category->image);  
+           }
+            $image = $request->file('image');
+            $img = rand() . '.' . $image->getClientOriginalExtension();
+            $location = public_path('backend/img/categories/' . $img);
+            Image::make($image)->save($location);
+            $category->image = $img; 
+        }
+
+        $category->save();
+        return redirect()->route('category.manage');
     }
 
     /**
@@ -94,8 +140,16 @@ class CategoryController extends Controller
      * @param  \App\Models\Model\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy($id)
     {
-        //
+        $category = Category::find($id);
+
+        if (File::exists('backend/img/categories/' . $category->image))
+           {
+              File::delete('backend/img/categories/' . $category->image);  
+           }
+           
+           $category->delete();
+           return redirect()->route('category.manage');
     }
 }

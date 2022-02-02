@@ -48,28 +48,27 @@
                     <label>Category Name</label>
                     <input type="text" name="name" class="form-control" required='required'>
                   </div>
+                  
+                  <div class="form-group">
+                    <label>Parent Category</label>
+                      <select class="form-control" name="parent_id">
+                        <option value="">Please Select A Parent Category If Any</option>
+                        @foreach ($primary_category as $category)
+                          <option value="{{$category->id}}">{{$category->name}}</option>
+                        @endforeach
+                      </select>
+                  </div>
 
                   <div class="form-group">
                     <label for="">Description</label>
                     <textarea name="desc" rows="4" class="form-control"></textarea>
                   </div>
-               
+
                   <div class="form-group">
-                    <label>Category Logo</label>
+                    <label>Category Thumbnail</label>
                     <input type="file" name="image" class="form-control-file">
                   </div>
-
-                  <div class="form-group">
-                    <label>Parent Category</label>
-                      <select class="form-control" name="parent_id">
-                        <option>Please Select A Parent Category If Any</option>
-                        @foreach ($primary_category as $category)
-                          <option value="{{$category->id}}">{{$category->name}}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                  </div>
-
+                  
                   <div class="form-group">
                     <input type="submit" name="addCategory" class="btn btn-primary btn-block" value="Add New Category">
                   </div>
